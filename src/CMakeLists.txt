@@ -1,4 +1,4 @@
 cmake_minimum_required (VERSION 2.6)
 add_compile_options(-Wall -Wextra -Wpedantic)
 project (CpuEmulator)
-add_executable(CpuEmulator main.cpp)
+add_executable(CpuEmulator main.cpp cpu.cpp alu.cpp cu.cpp ram.cpp bus.cpp register.cpp clock.cpp)

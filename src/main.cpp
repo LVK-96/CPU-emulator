@@ -1,9 +1,14 @@
 #include <iostream>
-//#include "CpuEmulatorConfig.h"
-
+#include "cpu.hpp"
 
 int main() 
 {
-    std::cout<<"Hello world!"<<std::endl;
+    CPU cpu;
+    cpu.start();
+    
+    while(1) {
+        cpu.clockCycle();
+    }
+
     return 0;
 }
