@@ -1,3 +1,0 @@
-// the configured options and settings for Tutorial
-#define CpuEmulator_ERSION_MAJOR @CpuEmulator_VERSION_MAJOR@
-#define CpuEmulator_VERSION_MINOR @CpuEmulator_VERSION_MINOR@
