@@ -8,7 +8,7 @@
 class CU 
 {
     public:
-        CU(Clock clock, RAM ram, ALU alu, Bus systemBus, Register programCounter,
+        CU(Clock* clock, RAM ram, ALU alu, Bus systemBus, Register programCounter,
         Register memoryAddresReg, Register instructionReg, Register A, Register B, 
         Register outputReg);
         ~CU() = default;
@@ -19,7 +19,7 @@ class CU
         void execute();
 
     private:
-        Clock clock_;
+        Clock* clock_;
         RAM ram_;
         ALU alu_;
         Bus systemBus_;

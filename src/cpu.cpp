@@ -2,7 +2,7 @@
 
 CPU::CPU(): is_paused(true) 
 {
-    clock_ = Clock();
+    clock_ = new Clock(5);
     ram_ = RAM();
     alu_ = ALU();
     systemBus_ = Bus();
@@ -19,39 +19,40 @@ CPU::CPU(): is_paused(true)
 CPU::~CPU() 
 {
     delete cu_;
+    delete clock_;
 }
 
-RAM CPU::get_RAM() 
+RAM CPU::get_RAM() const
 {
     return ram_;
 }
 
-Register CPU::get_programCounter() 
+Register CPU::get_programCounter() const 
 {
     return programCounter_;
 }
 
-Register CPU::get_memoryAddresReg() 
+Register CPU::get_memoryAddresReg() const
 {
     return memomryAddressReg_;
 }
 
-Register CPU::get_instructionReg() 
+Register CPU::get_instructionReg() const
 {
     return instructionReg_;
 }
 
-Register CPU::get_A() 
+Register CPU::get_A() const
 {
     return A_;
 }
 
-Register CPU::get_B() 
+Register CPU::get_B() const
 {
     return B_;
 }
 
-Register CPU::get_outputReg() 
+Register CPU::get_outputReg() const 
 {
     return outputReg_;
 }
