@@ -14,7 +14,7 @@ class CU
         ~CU() = default;
         CU(const CU& other) = default;
         CU& operator= (CU& other) = default;
-        void clockCycle();
+        void instructionCycle();
         void stepClock();
         void execute();
 

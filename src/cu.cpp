@@ -6,7 +6,7 @@ CU::CU(Clock* clock, RAM ram, ALU alu, Bus systemBus, Register programCounter,
     memoryAddresReg_(memoryAddresReg), instructionReg_(instructionReg), A_(A), 
     B_(B), outputReg_(outputReg), step_(0) {}
 
-void CU::clockCycle() 
+void CU::instructionCycle() 
 {
     if (step_ == 0) { // read from pc to mar and pc++
 
@@ -14,8 +14,7 @@ void CU::clockCycle()
 
     } else if (step_ >= 2) { // execute instruction in ir 
 
-    }
-    
+    }   
     stepClock();
 }
 

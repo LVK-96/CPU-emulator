@@ -16,7 +16,7 @@ CPU::CPU(): is_paused(true)
     memomryAddressReg_, instructionReg_, A_, B_, outputReg_);
 }
 
-CPU::~CPU() 
+CPU::~CPU()
 {
     delete cu_;
     delete clock_;
