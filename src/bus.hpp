@@ -4,8 +4,9 @@ class Bus {
     public:
         Bus();
         void reset();
-        int getData();
-        void setData(int value);
+        int get_data();
+        void set_data(int value);
+        
     private:
         int data_;
 };

@@ -7,12 +7,12 @@ void Bus::reset()
     data_ = 0;
 }
 
-int Bus::getData()
+int Bus::get_data()
 {
     return data_;
 }
         
-void Bus::setData(int value)
+void Bus::set_data(int value)
 {
     data_ = value;
 }
