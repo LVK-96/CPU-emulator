@@ -1,6 +1,7 @@
 #pragma once
 #include <boost/utility/binary.hpp>
 #include <vector>
+#include <iostream>
 #include "alu.hpp"
 #include "bus.hpp"
 #include "clock.hpp"
@@ -33,6 +34,8 @@ class CU
         ~CU();
         CU(CU& other) = default;
         CU& operator= (CU& other) = default;
+        void start();
+        void stop();
         void instructionCycle();
         void stepClock();
         void execute(int instruction);
@@ -41,7 +44,7 @@ class CU
     private:
         Clock* clock_;
         RAM* ram_;
-        ALU alu_;
+        ALU* alu_;
         Bus* dataBus_;
         Bus* registerBus_;
         Register* programCounter_;
@@ -51,5 +54,6 @@ class CU
         Register* B_;
         Register* outputReg_;
         std::vector<Flag> flags_;
-        int step_; //step in instruction cycle 
+        int step_; //step in instruction cycle
+        bool halted_; 
 };

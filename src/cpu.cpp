@@ -1,20 +1,22 @@
 #include "cpu.hpp"
 
-CPU::CPU(): is_paused(true) {}
+CPU::CPU(): halted_(true) {}
 
 void CPU::start() 
 {
-    is_paused = false;
+    halted_ = false;
+    cu_.start();
 }
 
 void CPU::stop() 
 {
-    is_paused = true;
+    cu_.stop();
+    halted_ = true;
 }
 
 void CPU::clockCycle() 
 {
-    if (!is_paused) {
+    if (!halted_) {
         cu_.instructionCycle();        
     } else {
         std::cout<<"paused"<<std::endl;

@@ -16,6 +16,6 @@ class CPU
         void clockCycle();
 
     private:
-        bool is_paused;
+        bool halted_;
         CU cu_;
 };

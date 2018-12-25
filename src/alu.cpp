@@ -1,1 +1,36 @@
 #include "alu.hpp"
+
+ALU::ALU(Register* A, Register* B, Bus* dataBus): A_(A), B_(B), 
+dataBus_(dataBus), data_(0), substract_(false), out_(false) {}
+
+void ALU::stepClock()
+{
+    if (out_) {
+        dataBus_->set_data(get_data());
+    } else if (substract_) {
+        set_data(A_->get_data() - B_->get_data());
+    }
+}
+
+void ALU::set_substract() 
+{
+    out_ = false;
+    substract_ = true;
+}
+
+
+void ALU::set_out()
+{
+    substract_ = false;
+    out_ = true;
+}
+
+void ALU::set_data(int data)
+{
+    data_ = data;
+}
+
+int ALU::get_data() const
+{
+    return data_;
+}

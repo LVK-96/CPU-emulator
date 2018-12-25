@@ -16,8 +16,8 @@ class Register
         void set_out();
 
     private:
-        int data_;
         Bus* registerBus_;
         bool in_;
         bool out_;
+        int data_;
 };

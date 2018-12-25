@@ -20,7 +20,7 @@ void RAM::set_data(int value)
 {
     address_ = (*data_.end()).first;
     address_++;
-    data_.insert(address_, value);
+    data_.insert(std::make_pair(address_, value));
 }
 
 int RAM::get_data(int addr) const
