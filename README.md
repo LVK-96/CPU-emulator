@@ -1,4 +1,4 @@
 # CPU emulator
-CPU emulator implemented using C++
+CPU emulator written in C++.
 * /src: source code
 * /doc: documentation 
