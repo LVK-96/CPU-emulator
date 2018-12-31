@@ -9,11 +9,11 @@ Register::~Register()
 
 void Register::stepClock() 
 {
-    if (in_) {
+/*  if (in_) {
         set_data(registerBus_->get_data());
     } else if (out_) {
         registerBus_->set_data(get_data());
-    }
+    } */    
 }
 
 int Register::get_data() const

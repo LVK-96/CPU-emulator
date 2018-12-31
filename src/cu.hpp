@@ -1,5 +1,6 @@
 #pragma once
 #include <boost/utility/binary.hpp>
+#include <bitset>
 #include <vector>
 #include <iostream>
 #include "alu.hpp"

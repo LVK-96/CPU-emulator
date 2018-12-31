@@ -1,6 +1,13 @@
 #include "ram.hpp"
 
-RAM::RAM(Bus* dataBus): dataBus_(dataBus), in_(false), out_(false), address_(0) {}
+RAM::RAM(Bus* dataBus): dataBus_(dataBus), in_(false), out_(false), address_(0) 
+{
+    set_data(address_, BOOST_BINARY( 0000 ));
+    address_++;
+    set_data(address_, BOOST_BINARY( 0000 0001 ));
+    address_++;
+    set_data(address_, BOOST_BINARY( 1001 ));
+}
 
 RAM::~RAM()
 {
@@ -9,18 +16,16 @@ RAM::~RAM()
 
 void RAM::stepClock()
 {
-    if (in_) {
+/*      if (in_) {
         set_data(dataBus_->get_data());
     } else if (out_) {
         dataBus_->set_data(get_data(address_));
-    }
+    } */
 }
 
-void RAM::set_data(int value)
+void RAM::set_data(int addr, int value)
 {
-    address_ = (*data_.end()).first;
-    address_++;
-    data_.insert(std::make_pair(address_, value));
+    data_.insert(std::make_pair(addr, value));
 }
 
 int RAM::get_data(int addr) const
@@ -28,7 +33,7 @@ int RAM::get_data(int addr) const
     return data_.at(addr);
 }
 
-std::unordered_map<int, int> RAM::dump() const
+std::map<int, int> RAM::dump() const
 {
     return data_;
 }
