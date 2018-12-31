@@ -24,6 +24,9 @@ CU::~CU()
     delete A_;
     delete B_;
     delete outputReg_;
+    delete registerBus_;
+    delete alu_;
+    delete ram_;
 }
 
 void CU::start()
@@ -36,22 +39,31 @@ void CU::stop()
     halted_ = true; 
 }
 
+bool CU::is_halted() const
+{
+    if (halted_) {
+        return true;
+    }
+    return false;
+}
+
 void CU::instructionCycle() 
 {
-    if (step_ == 0) { // read from pc to mar and pc++
-        flags_ = {Flag::MI, Flag::CO};
-        memoryAddressReg_->set_data(programCounter_->get_data());
-        programCounter_->set_data(programCounter_->get_data()+1);
-        set_flags();
-    } else if (step_ == 1) { //read from ram to ir
-        flags_ = {Flag::RO, Flag::II};
-        instructionReg_->set_data(ram_->get_data(memoryAddressReg_->get_data()));
-        set_flags();
-    } else if (step_ >= 2) { // execute instruction in ir 
-        execute(instructionReg_->get_data());
+    if (!halted_) {
+        if (step_ == 0) { // read from pc to mar and pc++
+            flags_ = {Flag::MI, Flag::CO};
+            memoryAddressReg_->set_data(programCounter_->get_data());
+            programCounter_->set_data(programCounter_->get_data()+1);
+            set_flags();
+        } else if (step_ == 1) { //read from ram to ir
+            flags_ = {Flag::RO, Flag::II};
+            instructionReg_->set_data(ram_->get_data(memoryAddressReg_->get_data()));
+            set_flags();
+        } else if (step_ >= 2) { // execute instruction in ir 
+            execute(instructionReg_->get_data());
+        }
+        stepClock();
     }
-       
-    stepClock();
 }
 
 void CU::stepClock() 

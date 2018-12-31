@@ -5,7 +5,7 @@ class Register
 {
     public:
         Register(Bus* registerBus);
-        ~Register();
+        ~Register() = default;
         Register(Register& other) = default;
         Register& operator= (Register& other) = default;
         void stepClock();

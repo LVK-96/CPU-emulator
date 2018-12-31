@@ -10,15 +10,35 @@ void CPU::start()
 
 void CPU::stop() 
 {
-    cu_.stop();
+    if (!cu_.is_halted()) {
+        cu_.stop();
+    }
     halted_ = true;
+}
+
+bool CPU::is_halted() const
+{
+    if (halted_) {
+        return true;
+    }
+    return false;
 }
 
 void CPU::clockCycle() 
 {
-    if (!halted_) {
-        cu_.instructionCycle();        
+    if (!cu_.is_halted()) {
+        cu_.instructionCycle();
     } else {
-        std::cout<<"paused"<<std::endl;
+        std::cout<<"Paused"<<std::endl;
+        std::cout<<"Run program again? (y/n)"<<std::endl;
+        std::string answer;
+        std::cin>>answer;
+        if (answer == "y") {
+            stop();
+        } else if (answer == "n") {
+            stop();
+        } else {
+            clockCycle();
+        }
     } 
 }

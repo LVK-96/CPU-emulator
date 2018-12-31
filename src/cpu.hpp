@@ -13,6 +13,7 @@ class CPU
         CPU();
         void start();
         void stop();
+        bool is_halted() const;
         void clockCycle();
 
     private:

@@ -2,11 +2,6 @@
 
 Register::Register(Bus* registerBus): registerBus_(registerBus), in_(false), out_(false), data_(0) {}
 
-Register::~Register()
-{
-    delete registerBus_;
-}
-
 void Register::stepClock() 
 {
 /*  if (in_) {

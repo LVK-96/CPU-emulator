@@ -37,6 +37,7 @@ class CU
         CU& operator= (CU& other) = default;
         void start();
         void stop();
+        bool is_halted() const;
         void instructionCycle();
         void stepClock();
         void execute(int instruction);
