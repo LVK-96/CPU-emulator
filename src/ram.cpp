@@ -2,11 +2,11 @@
 
 RAM::RAM(Bus* dataBus): dataBus_(dataBus), in_(false), out_(false), address_(0) 
 {
-    set_data(address_, BOOST_BINARY( 0000 ));
+ /* set_data(address_, BOOST_BINARY( 0000 ));
     address_++;
     set_data(address_, BOOST_BINARY( 0000 0001 ));
     address_++;
-    set_data(address_, BOOST_BINARY( 1001 ));
+    set_data(address_, BOOST_BINARY( 1001 )); */
 }
 
 RAM::~RAM()

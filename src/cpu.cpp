@@ -1,6 +1,8 @@
 #include "cpu.hpp"
 
-CPU::CPU(): halted_(true) {}
+CPU::CPU(): halted_(true) {
+    cu_.assembler();
+}
 
 void CPU::start() 
 {

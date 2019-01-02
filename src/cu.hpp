@@ -3,6 +3,7 @@
 #include <bitset>
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include "alu.hpp"
 #include "bus.hpp"
 #include "clock.hpp"
@@ -14,21 +15,21 @@ class CU
     public:
         enum class Flag
         {
-            HLT,     
-            MI,  
-            RI, 
-            RO, 
-            IO,
-            II,
-            AI,
-            AO,
-            EO, 
-            SUB,
-            BI,
-            OI,
-            CE,
-            CO,
-            J 
+            HLT_FLG,     
+            MI_FLG,  
+            RI_FLG, 
+            RO_FLG, 
+            IO_FLG,
+            II_FLG,
+            AI_FLG,
+            AO_FLG,
+            EO_FLG, 
+            SUB_FLG,
+            BI_FLG,
+            OI_FLG,
+            CE_FLG,
+            CO_FLG,
+            J_FLG 
         };
 
         CU();
@@ -42,6 +43,7 @@ class CU
         void stepClock();
         void execute(int instruction);
         void set_flags();
+        void assembler();
 
     private:
         Clock* clock_;
