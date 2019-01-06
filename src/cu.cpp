@@ -33,7 +33,6 @@ CU::~CU()
     delete A_;
     delete B_;
     delete outputReg_;
-    delete registerBus_;
     delete alu_;
     delete ram_;
 }
@@ -85,7 +84,6 @@ void CU::stepClock()
     A_->stepClock();
     B_->stepClock();
     outputReg_->stepClock();
-    std::cout<<step_<<std::endl;
     step_++;
     if (step_ > 4){
         step_ = 0;
@@ -109,8 +107,6 @@ void CU::execute(int instruction)
     int param = instruction>>4;
     instruction = instruction & BOOST_BINARY(0000 1111);
     stepClock();
-    std::cout<<"Instruction: "<<std::bitset<4>(instruction)<<std::endl;
-    std::cout<<"Parameter: "<<std::bitset<4>(param)<<std::endl;
 
     if (instruction == NOP) {
         // do nothing
