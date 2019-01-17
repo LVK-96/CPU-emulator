@@ -4,7 +4,7 @@ RAM::RAM(Bus* dataBus): dataBus_(dataBus), in_(false), out_(false), address_(0) 
 
 RAM::~RAM()
 {
-    delete dataBus_;
+    // delete dataBus_;
 }
 
 void RAM::stepClock()

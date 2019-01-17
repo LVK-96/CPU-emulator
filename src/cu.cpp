@@ -35,7 +35,6 @@ CU::~CU()
     delete A_;
     delete B_;
     delete outputReg_;
-    delete registerBus_;
     delete alu_;
     delete ram_;
 }
@@ -88,7 +87,6 @@ void CU::stepClock()
     A_->stepClock();
     B_->stepClock();
     outputReg_->stepClock();
-    std::cout<<step_<<std::endl;
     step_++;
     if (step_ > 4){
         step_ = 0;
