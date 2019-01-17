@@ -8,7 +8,10 @@ void Register::stepClock()
         set_data(registerBus_->get_data());
     } else if (out_) {
         registerBus_->set_data(get_data());
-    }   
+    }
+
+    out_ = false;
+    in_ = false;   
 }
 
 int Register::get_data() const

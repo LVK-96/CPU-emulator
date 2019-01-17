@@ -2,11 +2,6 @@
 
 RAM::RAM(Bus* dataBus): dataBus_(dataBus), in_(false), out_(false), address_(0) {}
 
-RAM::~RAM()
-{
-    // delete dataBus_;
-}
-
 void RAM::stepClock()
 {
     if (in_) {
@@ -14,6 +9,9 @@ void RAM::stepClock()
     } else if (out_) {
         dataBus_->set_data(get_data(address_));
     }
+
+    out_ = false;
+    in_ = false;  
 }
 
 void RAM::set_data(int addr, int value)

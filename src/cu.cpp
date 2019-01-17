@@ -36,7 +36,6 @@ CU::~CU()
     delete B_;
     delete outputReg_;
     delete alu_;
-    delete ram_;
 }
 
 void CU::start()
@@ -64,9 +63,9 @@ void CU::instructionCycle()
             flags_ = {Flag::MI_FLG, Flag::CO_FLG};
             //memoryAddressReg_->set_data(programCounter_->get_data());
             //programCounter_->set_data(programCounter_->get_data()+1);
-            programCounter_->set_data(programCounter_->get_data()+1);
             set_flags();
         } else if (step_ == 1) { //read from ram to ir
+            programCounter_->set_data(programCounter_->get_data()+1);
             flags_ = {Flag::RO_FLG, Flag::II_FLG};
             //instructionReg_->set_data(ram_->get_data(memoryAddressReg_->get_data()));
             set_flags();
@@ -74,6 +73,7 @@ void CU::instructionCycle()
             execute(instructionReg_->get_data());
         }
         stepClock();
+
     }
 }
 
@@ -121,61 +121,83 @@ void CU::execute(int instruction)
     } else if (instruction == LDA) {
         flags_ = {Flag::MI_FLG, Flag::IO_FLG};
         //memoryAddressReg_->set_data(param);
+        set_flags();
         stepClock();
         flags_ = {Flag::AI_FLG, Flag::RO_FLG};
         //A_->set_data(ram_->get_data(memoryAddressReg_->get_data()));
+        set_flags();
         stepClock();
         step_ = 5;
     } else if (instruction == ADD) {
         flags_ = {Flag::MI_FLG, Flag::IO_FLG};
         //memoryAddressReg_->set_data(param);
+        set_flags();
         stepClock();
         flags_ = {Flag::BI_FLG, Flag::RO_FLG};
         //B_->set_data(memoryAddressReg_->get_data());
+        set_flags();
         stepClock();
         flags_ = {Flag::ADD_FLG};
         //alu_->set_data(A_->get_data() + B_->get_data());
+        set_flags();
         stepClock();
         flags_ = {Flag::EO_FLG, Flag::AI_FLG};
         //A_->set_data(alu_->get_data());
     } else if (instruction == SUB) {
         flags_ = {Flag::MI_FLG, Flag::IO_FLG};
         //memoryAddressReg_->set_data(param);
+        set_flags();
         stepClock();
         flags_ = {Flag::BI_FLG, Flag::RO_FLG};
         //B_->set_data(memoryAddressReg_->get_data());
+        set_flags();
         stepClock();
         flags_ = {Flag::SUB_FLG};
         //alu_->set_data(A_->get_data() - B_->get_data());
+        set_flags();
         stepClock();
         flags_ = {Flag::EO_FLG, Flag::AI_FLG};
         //A_->set_data(alu_->get_data());
     } else if (instruction == STA) {
         //memoryAddressReg_->set_data(param);
         flags_ = {Flag::MI_FLG, Flag::IO_FLG};
+        set_flags();
         stepClock();
         //ram_->set_data(memoryAddressReg_->get_data(), A_->get_data());
         flags_ = {Flag::RI_FLG, Flag::AO_FLG};
+        set_flags();
+        stepClock();
         step_ = 5;
     } else if (instruction == JMP) {
         //memoryAddressReg_->set_data(param);
-        flags_ = 
+        flags_ = {Flag::MI_FLG, Flag::IO_FLG};
+        set_flags(); 
         stepClock();
         flags_ = {Flag::J_FLG};
+        set_flags();
+        stepClock();
         step_ = 5;
-        programCounter_->set_data(memoryAddressReg_->get_data());
+        //programCounter_->set_data(memoryAddressReg_->get_data());
     } else if (instruction == LDI) {
-        A_->set_data(param);
+        //A_->set_data(param);
+        flags_ = {Flag::AI_FLG, Flag::IO_FLG};
+        set_flags();
+        stepClock();
         step_ = 5;
     } else if (instruction == JC) {
         // not implemented yet
         step_ = 5;
     } else if (instruction == OUT) {
-        outputReg_->set_data(A_->get_data());
-        std::cout<<"Output: "<<outputReg_->get_data()<<std::endl;
+        //outputReg_->set_data(A_->get_data());
+        flags_ = {Flag::OI_FLG, Flag::AO_FLG};
+        set_flags();
+        stepClock();
         step_ = 5;
     } else if (instruction == HLT) {
-        halted_ = true;
+        //halted_ = true;
+        flags_ = {Flag::HLT_FLG};
+        set_flags();
+        stepClock();
     }
 }
 
@@ -236,6 +258,7 @@ void CU::set_flags()
     }
 }
 
+//TODO move assembler to a separate file
 void CU::assembler()
 {
     // read from file and write to ram starting from address 0
