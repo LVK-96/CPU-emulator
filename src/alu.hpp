@@ -9,7 +9,7 @@ class ALU {
         ALU& operator= (ALU& other) = default;
         void stepClock();
         void set_substract();
-        void set_in();
+        void set_add();
         void set_out();
         void set_data(int data);
         int get_data() const;
@@ -20,6 +20,7 @@ class ALU {
         Bus* dataBus_;
         int data_;
         bool substract_;
+        bool add_;
         bool out_;
 
 };

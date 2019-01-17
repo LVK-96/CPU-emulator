@@ -14,6 +14,8 @@
 CU::CU(): step_(0), halted_(true)
 {
     clock_ = new Clock(5);
+    dataBus_ = new Bus();
+    registerBus_ = new Bus();
     ram_ = new RAM(dataBus_);
     programCounter_ = new Register(registerBus_);
     memoryAddressReg_ = new Register(registerBus_);
@@ -61,14 +63,15 @@ void CU::instructionCycle()
     if (!halted_) {
         if (step_ == 0) { // read from pc to mar and pc++
             flags_ = {Flag::MI_FLG, Flag::CO_FLG};
-            memoryAddressReg_->set_data(programCounter_->get_data());
+            //memoryAddressReg_->set_data(programCounter_->get_data());
+            //programCounter_->set_data(programCounter_->get_data()+1);
             programCounter_->set_data(programCounter_->get_data()+1);
             set_flags();
         } else if (step_ == 1) { //read from ram to ir
             flags_ = {Flag::RO_FLG, Flag::II_FLG};
-            instructionReg_->set_data(ram_->get_data(memoryAddressReg_->get_data()));
+            //instructionReg_->set_data(ram_->get_data(memoryAddressReg_->get_data()));
             set_flags();
-        } else if (step_ >= 2) { // execute instruction in ir 
+        } else if (step_ > 1) { // execute instruction in ir 
             execute(instructionReg_->get_data());
         }
         stepClock();
@@ -105,45 +108,62 @@ void CU::execute(int instruction)
     JC = 0111,
     OUT = 1000,
     HLT = 1001 */
-
+    
     int param = instruction>>4;
     instruction = instruction & BOOST_BINARY(0000 1111);
+    
     stepClock();
+    
     std::cout<<"Instruction: "<<std::bitset<4>(instruction)<<std::endl;
     std::cout<<"Parameter: "<<std::bitset<4>(param)<<std::endl;
-
+    
     if (instruction == NOP) {
         // do nothing
         step_ = 5;
     } else if (instruction == LDA) {
-        memoryAddressReg_->set_data(param);
+        flags_ = {Flag::MI_FLG, Flag::IO_FLG};
+        //memoryAddressReg_->set_data(param);
         stepClock();
-        A_->set_data(ram_->get_data(memoryAddressReg_->get_data()));
+        flags_ = {Flag::AI_FLG, Flag::RO_FLG};
+        //A_->set_data(ram_->get_data(memoryAddressReg_->get_data()));
+        stepClock();
         step_ = 5;
     } else if (instruction == ADD) {
-        memoryAddressReg_->set_data(param);
+        flags_ = {Flag::MI_FLG, Flag::IO_FLG};
+        //memoryAddressReg_->set_data(param);
         stepClock();
-        B_->set_data(memoryAddressReg_->get_data());
+        flags_ = {Flag::BI_FLG, Flag::RO_FLG};
+        //B_->set_data(memoryAddressReg_->get_data());
         stepClock();
-        alu_->set_data(A_->get_data() + B_->get_data());
+        flags_ = {Flag::ADD_FLG};
+        //alu_->set_data(A_->get_data() + B_->get_data());
         stepClock();
-        A_->set_data(alu_->get_data());
+        flags_ = {Flag::EO_FLG, Flag::AI_FLG};
+        //A_->set_data(alu_->get_data());
     } else if (instruction == SUB) {
-        memoryAddressReg_->set_data(param);
+        flags_ = {Flag::MI_FLG, Flag::IO_FLG};
+        //memoryAddressReg_->set_data(param);
         stepClock();
-        B_->set_data(memoryAddressReg_->get_data());
+        flags_ = {Flag::BI_FLG, Flag::RO_FLG};
+        //B_->set_data(memoryAddressReg_->get_data());
         stepClock();
-        alu_->set_data(A_->get_data() - B_->get_data());
+        flags_ = {Flag::SUB_FLG};
+        //alu_->set_data(A_->get_data() - B_->get_data());
         stepClock();
-        A_->set_data(alu_->get_data());
+        flags_ = {Flag::EO_FLG, Flag::AI_FLG};
+        //A_->set_data(alu_->get_data());
     } else if (instruction == STA) {
-        memoryAddressReg_->set_data(param);
+        //memoryAddressReg_->set_data(param);
+        flags_ = {Flag::MI_FLG, Flag::IO_FLG};
         stepClock();
-        ram_->set_data(memoryAddressReg_->get_data(), A_->get_data());
+        //ram_->set_data(memoryAddressReg_->get_data(), A_->get_data());
+        flags_ = {Flag::RI_FLG, Flag::AO_FLG};
         step_ = 5;
     } else if (instruction == JMP) {
-        memoryAddressReg_->set_data(param);
+        //memoryAddressReg_->set_data(param);
+        flags_ = 
         stepClock();
+        flags_ = {Flag::J_FLG};
         step_ = 5;
         programCounter_->set_data(memoryAddressReg_->get_data());
     } else if (instruction == LDI) {
@@ -173,8 +193,10 @@ void CU::set_flags()
     'AI' = A in,
     'AO' = A out,
     'EO' = ALU out,
+    'ADD' = Add,
     'SUB' = Substract,
     'BI' = B in,
+    'BO' = B out,
     'OI' = Output in,
     'CO' = PC out,
     'J' =  Jump  */
@@ -200,8 +222,12 @@ void CU::set_flags()
             alu_->set_out();
         } else if (flag == Flag::SUB_FLG) { // Substract
             alu_->set_substract(); 
+        } else if (flag == Flag::ADD_FLG) { // Add 
+            alu_->set_add();
         } else if (flag == Flag::BI_FLG) { // B in 
             B_->set_in();
+        } else if (flag == Flag::BO_FLG) {
+            B_->set_out();
         } else if (flag == Flag::OI_FLG) { // Output in
             outputReg_->set_in();
         } else if (flag == Flag::CO_FLG) { // PC out

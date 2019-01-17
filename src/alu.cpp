@@ -1,7 +1,7 @@
 #include "alu.hpp"
 
 ALU::ALU(Register* A, Register* B, Bus* dataBus): A_(A), B_(B), 
-dataBus_(dataBus), data_(0), substract_(false), out_(false) {}
+dataBus_(dataBus), data_(0), substract_(false), add_(false), out_(false) {}
 
 void ALU::stepClock()
 {
@@ -9,13 +9,21 @@ void ALU::stepClock()
         dataBus_->set_data(get_data());
     } else if (substract_) {
         set_data(A_->get_data() - B_->get_data());
+    } else if (add_) {
+        set_data(A_->get_data() + B_->get_data());
     }
 }
 
 void ALU::set_substract() 
 {
-    out_ = false;
+    add_ = false;
     substract_ = true;
+}
+
+void ALU::set_add() 
+{
+    substract_ = false;
+    add_ = true;
 }
 
 

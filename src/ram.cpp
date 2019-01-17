@@ -1,13 +1,6 @@
 #include "ram.hpp"
 
-RAM::RAM(Bus* dataBus): dataBus_(dataBus), in_(false), out_(false), address_(0) 
-{
- /* set_data(address_, BOOST_BINARY( 0000 ));
-    address_++;
-    set_data(address_, BOOST_BINARY( 0000 0001 ));
-    address_++;
-    set_data(address_, BOOST_BINARY( 1001 )); */
-}
+RAM::RAM(Bus* dataBus): dataBus_(dataBus), in_(false), out_(false), address_(0) {}
 
 RAM::~RAM()
 {
@@ -16,11 +9,11 @@ RAM::~RAM()
 
 void RAM::stepClock()
 {
-/*      if (in_) {
-        set_data(dataBus_->get_data());
+    if (in_) {
+        set_data(address_, dataBus_->get_data());
     } else if (out_) {
         dataBus_->set_data(get_data(address_));
-    } */
+    }
 }
 
 void RAM::set_data(int addr, int value)
