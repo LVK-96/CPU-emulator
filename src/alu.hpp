@@ -13,6 +13,7 @@ class ALU {
         void set_out();
         void set_data(int data);
         int get_data() const;
+        void reset_flags();
     
     private:
         Register* A_;

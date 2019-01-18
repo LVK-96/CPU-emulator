@@ -1,17 +1,14 @@
 #include "register.hpp"
 
-Register::Register(Bus* registerBus): registerBus_(registerBus), in_(false), out_(false), data_(0) {}
+Register::Register(Bus* bus): bus_(bus), in_(false), out_(false), data_(0) {}
 
 void Register::stepClock() 
 {
     if (in_) {
-        set_data(registerBus_->get_data());
+        set_data(bus_->get_data());
     } else if (out_) {
-        registerBus_->set_data(get_data());
+        bus_->set_data(get_data());
     }
-
-    out_ = false;
-    in_ = false;   
 }
 
 int Register::get_data() const
@@ -22,6 +19,12 @@ int Register::get_data() const
 void Register::set_data(int data)
 {
     data_ = data;
+}
+
+void Register::reset_flags()
+{
+    in_ = false;
+    out_ = false; 
 }
 
 void Register::reset()

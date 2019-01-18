@@ -29,7 +29,6 @@ class CU
             BI_FLG,
             BO_FLG,
             OI_FLG,
-            CE_FLG,
             CO_FLG,
             J_FLG 
         };
@@ -45,6 +44,7 @@ class CU
         void stepClock();
         void execute(int instruction);
         void set_flags();
+        void reset_flags();
         void assembler();
 
     private:
@@ -52,7 +52,7 @@ class CU
         RAM* ram_;
         ALU* alu_;
         Bus* dataBus_;
-        Bus* registerBus_;
+        Bus* addressBus_;
         Register* programCounter_;
         Register* memoryAddressReg_;
         Register* instructionReg_;

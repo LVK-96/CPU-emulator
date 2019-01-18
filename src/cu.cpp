@@ -15,15 +15,15 @@ CU::CU(): step_(0), halted_(true)
 {
     clock_ = new Clock(5);
     dataBus_ = new Bus();
-    registerBus_ = new Bus();
-    ram_ = new RAM(dataBus_);
-    programCounter_ = new Register(registerBus_);
-    memoryAddressReg_ = new Register(registerBus_);
-    instructionReg_ = new Register(registerBus_);
-    A_ = new Register(registerBus_);
-    B_ = new Register(registerBus_);
-    outputReg_ = new Register(registerBus_);
-    alu_ = new ALU(A_, B_, registerBus_);
+    addressBus_ = new Bus();
+    ram_ = new RAM(dataBus_, addressBus_);
+    memoryAddressReg_ = new Register(addressBus_);
+    programCounter_ = new Register(addressBus_);
+    instructionReg_ = new Register(dataBus_);
+    A_ = new Register(dataBus_);
+    B_ = new Register(dataBus_);
+    outputReg_ = new Register(dataBus_);
+    alu_ = new ALU(A_, B_, dataBus_);
 }
 
 CU::~CU()
@@ -87,6 +87,7 @@ void CU::stepClock()
     A_->stepClock();
     B_->stepClock();
     outputReg_->stepClock();
+    reset_flags();
     step_++;
     if (step_ > 4){
         step_ = 0;
@@ -219,6 +220,7 @@ void CU::set_flags()
     'BO' = B out,
     'OI' = Output in,
     'CO' = PC out,
+    'CE' = PC set, 
     'J' =  Jump  */
 
     for (auto flag: flags_) {
@@ -246,16 +248,31 @@ void CU::set_flags()
             alu_->set_add();
         } else if (flag == Flag::BI_FLG) { // B in 
             B_->set_in();
-        } else if (flag == Flag::BO_FLG) {
+        } else if (flag == Flag::BO_FLG) { // B out
             B_->set_out();
         } else if (flag == Flag::OI_FLG) { // Output in
             outputReg_->set_in();
         } else if (flag == Flag::CO_FLG) { // PC out
             programCounter_->set_out();
         } else if (flag == Flag::J_FLG) { // JUMP
+            memoryAddressReg_->set_out();
             programCounter_->set_in();
         }
     }
+}
+
+void CU::reset_flags()
+{
+    ram_->reset_flags();
+    alu_->reset_flags();
+    programCounter_->reset_flags();
+    memoryAddressReg_->reset_flags();
+    instructionReg_->reset_flags();
+    ram_->reset_flags();
+    A_->reset_flags();
+    B_->reset_flags();
+    outputReg_->reset_flags();
+
 }
 
 //TODO move assembler to a separate file

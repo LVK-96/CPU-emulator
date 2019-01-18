@@ -12,10 +12,6 @@ void ALU::stepClock()
     } else if (add_) {
         set_data(A_->get_data() + B_->get_data());
     }
-
-    out_ = false;
-    substract_ = false;
-    add_ = false;  
 }
 
 void ALU::set_substract() 
@@ -45,4 +41,11 @@ void ALU::set_data(int data)
 int ALU::get_data() const
 {
     return data_;
+}
+
+void ALU::reset_flags()
+{
+    add_ = false;
+    substract_ = false;
+    out_ = false;
 }
