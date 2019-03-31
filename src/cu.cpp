@@ -1,7 +1,7 @@
 #include "cu.hpp"
 
 #define NOP 0
-#define LDA 1
+#define LOA 1
 #define ADD 2
 #define SUB 3
 #define STA 4
@@ -98,7 +98,7 @@ void CU::execute(int instruction)
 {
 /*  Instructions and corresponding mircocodes:
     NOP = 0000,
-    LDA = 0001,
+    LOA = 0001,
     ADD = 0010, 
     SUB = 0011,
     STA = 0100,
@@ -119,7 +119,7 @@ void CU::execute(int instruction)
     if (instruction == NOP) {
         // do nothing
         step_ = 5;
-    } else if (instruction == LDA) {
+    } else if (instruction == LOA) {
         flags_ = {Flag::MI_FLG, Flag::IO_FLG};
         //memoryAddressReg_->set_data(param);
         set_flags();
@@ -276,10 +276,20 @@ void CU::reset_flags()
 }
 
 //TODO move assembler to a separate file
-void CU::assembler()
+bool CU::assembler()
 {
     // read from file and write to ram starting from address 0
-    std::ifstream myfile("code.asm");
+    std::ifstream myfile("../../test/test.asm");
+    if (!myfile.is_open()) {
+        std::cout << "unable to open .asm file, halting" << std::endl;
+        return false;
+    }
+
+    if (myfile.peek() == std::ifstream::traits_type::eof()) {
+    // Empty File
+        std::cout << ".asm file empty, halting" << std::endl;
+        return false;
+    }
     std::string line;
     int address = 0;
     
@@ -291,7 +301,7 @@ void CU::assembler()
             std::string param = line.substr(4);
             unsigned int mircocode = std::stoul(param, nullptr, 16);
             mircocode = mircocode<<4;
-            mircocode += LDA;
+            mircocode += LOA;
             ram_->set_data(address, mircocode);
         } else if (instruction == "add") {
             std::string param = line.substr(4);
@@ -332,5 +342,6 @@ void CU::assembler()
             ram_->set_data(address, HLT);
         }
         address++;
-    }   
+    }
+    return true;   
 }

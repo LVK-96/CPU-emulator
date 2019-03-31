@@ -45,7 +45,7 @@ class CU
         void execute(int instruction);
         void set_flags();
         void reset_flags();
-        void assembler();
+        bool assembler();
 
     private:
         Clock* clock_;

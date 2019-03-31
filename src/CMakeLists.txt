@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.6)
 add_compile_options(-Wall -Wextra -Wpedantic -g)
-include_directories(/usr/local/boost_1_69_0)
+include_directories(/usr/local/lib/boost_1_69_0)
 project (CpuEmulator)
 add_executable(CpuEmulator main.cpp cpu.cpp alu.cpp cu.cpp ram.cpp bus.cpp register.cpp clock.cpp)

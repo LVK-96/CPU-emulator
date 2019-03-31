@@ -1,6 +1,7 @@
 #
 CpuEmulator
 *.asm
+.vscode
 
 # Prerequisites
 *.d
