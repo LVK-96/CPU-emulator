@@ -59,18 +59,16 @@ bool CU::is_halted() const
 void CU::instructionCycle() 
 {
     if (!halted_) {
-        if (step_ == 0) { // read from pc to mar and pc++
+        if (step_ == 0) { // read from pc to mar
             flags_ = {Flag::MI_FLG, Flag::CO_FLG};
-            //memoryAddressReg_->set_data(programCounter_->get_data());
-            //programCounter_->set_data(programCounter_->get_data()+1);
             set_flags();
-        } else if (step_ == 1) { //read from ram to ir
+        } else if (step_ == 1) { // pc++ and read from ram to ir
             programCounter_->set_data(programCounter_->get_data()+1);
             flags_ = {Flag::RO_FLG, Flag::II_FLG};
-            //instructionReg_->set_data(ram_->get_data(memoryAddressReg_->get_data()));
             set_flags();
         } else if (step_ > 1) { // execute instruction in ir 
             execute(instructionReg_->get_data());
+            std::cout<<outputReg_->get_data()<<std::endl;
         }
         stepClock();
 
@@ -97,16 +95,16 @@ void CU::stepClock()
 void CU::execute(int instruction)
 {
 /*  Instructions and corresponding mircocodes:
-    NOP = 0000,
-    LOA = 0001,
-    ADD = 0010, 
-    SUB = 0011,
-    STA = 0100,
-    JMP = 0101,
-    LDI = 0110,
-    JC = 0111,
-    OUT = 1000,
-    HLT = 1001 */
+    NOP = No operation = 0000,
+    LOA = Load from ram to A = 0001,
+    ADD = Add A and B to A = 0010, 
+    SUB = Substract A and B to A = 0011,
+    STA = Store to ram = 0100,
+    JMP = Jump to address = 0101,
+    LDI = Load given value to A = 0110,
+    JC = Conditional jump !NOT IMPLEMENTED YET!  = 0111,
+    OUT = Output data in A = 1000,
+    HLT = Halt = 1001 */
     
     int param = instruction>>4;
     instruction = instruction & BOOST_BINARY(0000 1111);
@@ -114,63 +112,51 @@ void CU::execute(int instruction)
     stepClock();
     
     std::cout<<"Instruction: "<<std::bitset<4>(instruction)<<std::endl;
-    std::cout<<"Parameter: "<<std::bitset<4>(param)<<std::endl;
+    std::cout<<"Parameter: "<<param<<std::endl;
     
     if (instruction == NOP) {
         // do nothing
         step_ = 5;
     } else if (instruction == LOA) {
         flags_ = {Flag::MI_FLG, Flag::IO_FLG};
-        //memoryAddressReg_->set_data(param);
         set_flags();
         stepClock();
         flags_ = {Flag::AI_FLG, Flag::RO_FLG};
-        //A_->set_data(ram_->get_data(memoryAddressReg_->get_data()));
         set_flags();
         stepClock();
         step_ = 5;
     } else if (instruction == ADD) {
         flags_ = {Flag::MI_FLG, Flag::IO_FLG};
-        //memoryAddressReg_->set_data(param);
         set_flags();
         stepClock();
         flags_ = {Flag::BI_FLG, Flag::RO_FLG};
-        //B_->set_data(memoryAddressReg_->get_data());
         set_flags();
         stepClock();
         flags_ = {Flag::ADD_FLG};
-        //alu_->set_data(A_->get_data() + B_->get_data());
         set_flags();
         stepClock();
         flags_ = {Flag::EO_FLG, Flag::AI_FLG};
-        //A_->set_data(alu_->get_data());
     } else if (instruction == SUB) {
         flags_ = {Flag::MI_FLG, Flag::IO_FLG};
-        //memoryAddressReg_->set_data(param);
         set_flags();
         stepClock();
         flags_ = {Flag::BI_FLG, Flag::RO_FLG};
-        //B_->set_data(memoryAddressReg_->get_data());
         set_flags();
         stepClock();
         flags_ = {Flag::SUB_FLG};
-        //alu_->set_data(A_->get_data() - B_->get_data());
         set_flags();
         stepClock();
         flags_ = {Flag::EO_FLG, Flag::AI_FLG};
-        //A_->set_data(alu_->get_data());
+        step_ = 5;
     } else if (instruction == STA) {
-        //memoryAddressReg_->set_data(param);
         flags_ = {Flag::MI_FLG, Flag::IO_FLG};
         set_flags();
         stepClock();
-        //ram_->set_data(memoryAddressReg_->get_data(), A_->get_data());
         flags_ = {Flag::RI_FLG, Flag::AO_FLG};
         set_flags();
         stepClock();
         step_ = 5;
     } else if (instruction == JMP) {
-        //memoryAddressReg_->set_data(param);
         flags_ = {Flag::MI_FLG, Flag::IO_FLG};
         set_flags(); 
         stepClock();
@@ -178,10 +164,11 @@ void CU::execute(int instruction)
         set_flags();
         stepClock();
         step_ = 5;
-        //programCounter_->set_data(memoryAddressReg_->get_data());
     } else if (instruction == LDI) {
-        //A_->set_data(param);
+        // bug in ldi instruction, load whole 8bit value (opcode + immediate)
+        // TODO: make it load only the immediate value 
         flags_ = {Flag::AI_FLG, Flag::IO_FLG};
+        dataBus_->set_data(param);
         set_flags();
         stepClock();
         step_ = 5;
@@ -189,13 +176,11 @@ void CU::execute(int instruction)
         // not implemented yet
         step_ = 5;
     } else if (instruction == OUT) {
-        //outputReg_->set_data(A_->get_data());
         flags_ = {Flag::OI_FLG, Flag::AO_FLG};
         set_flags();
         stepClock();
         step_ = 5;
     } else if (instruction == HLT) {
-        //halted_ = true;
         flags_ = {Flag::HLT_FLG};
         set_flags();
         stepClock();
@@ -297,7 +282,7 @@ bool CU::assembler()
         std::string instruction = line.substr(0, 3);
         if (instruction == "nop") {
             ram_->set_data(address, NOP);
-        } else if (instruction == "lda") {
+        } else if (instruction == "loa") {
             std::string param = line.substr(4);
             unsigned int mircocode = std::stoul(param, nullptr, 16);
             mircocode = mircocode<<4;
