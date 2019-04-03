@@ -9,6 +9,7 @@
 #include "clock.hpp"
 #include "ram.hpp"
 #include "register.hpp"
+#include "instruction_reg.hpp"
 
 class CU 
 {

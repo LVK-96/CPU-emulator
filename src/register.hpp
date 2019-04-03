@@ -5,10 +5,10 @@ class Register
 {
     public:
         Register(Bus* bus);
-        ~Register() = default;
+        virtual ~Register() = default;
         Register(Register& other) = default;
         Register& operator= (Register& other) = default;
-        void stepClock();
+        virtual void stepClock();
         int get_data() const;
         void set_data(int data);
         void reset_flags();
@@ -16,7 +16,7 @@ class Register
         void set_in();
         void set_out();
 
-    private:
+    protected:
         Bus* bus_;
         bool in_;
         bool out_;

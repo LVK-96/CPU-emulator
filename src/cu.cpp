@@ -19,7 +19,7 @@ CU::CU(): step_(0), halted_(true)
     ram_ = new RAM(dataBus_, addressBus_);
     memoryAddressReg_ = new Register(addressBus_);
     programCounter_ = new Register(addressBus_);
-    instructionReg_ = new Register(dataBus_);
+    instructionReg_ = new InstructionRegister(dataBus_);
     A_ = new Register(dataBus_);
     B_ = new Register(dataBus_);
     outputReg_ = new Register(dataBus_);
@@ -165,10 +165,7 @@ void CU::execute(int instruction)
         stepClock();
         step_ = 5;
     } else if (instruction == LDI) {
-        // bug in ldi instruction, load whole 8bit value (opcode + immediate)
-        // TODO: make it load only the immediate value 
         flags_ = {Flag::AI_FLG, Flag::IO_FLG};
-        dataBus_->set_data(param);
         set_flags();
         stepClock();
         step_ = 5;
