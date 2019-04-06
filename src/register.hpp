@@ -1,5 +1,6 @@
 #pragma once
 #include "bus.hpp"
+#include <cstdint>
 
 class Register 
 {
@@ -20,5 +21,5 @@ class Register
         Bus* bus_;
         bool in_;
         bool out_;
-        int data_;
+        uint8_t data_;
 };

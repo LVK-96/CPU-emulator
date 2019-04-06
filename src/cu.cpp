@@ -95,7 +95,7 @@ void CU::stepClock()
 void CU::execute(int instruction)
 {
 /*  Instructions and corresponding mircocodes:
-    NOP = No operation: nop  = 0000,
+    NOP = No operation: nop = 0000,
     LOA = Load from ram to A: loa <address> = 0001
     ADD = Add A and data from given memory address to A: add <address> = 0010, 
     SUB = Substract A and data from given memory address to A: sub <address> = 0011,
@@ -105,14 +105,15 @@ void CU::execute(int instruction)
     JC = Conditional jump !NOT IMPLEMENTED YET! = 0111,
     HLT = Halt: hlt = 1001 */
     
-    int param = instruction>>4;
+    std::cout << instruction << std::endl;
+    int param = instruction >> 4;
     instruction = instruction & BOOST_BINARY(0000 1111);
-    
+
     stepClock();
-    
+
     std::cout<<"Instruction: "<<std::bitset<4>(instruction)<<std::endl;
     std::cout<<"Parameter: "<<param<<std::endl;
-    
+
     if (instruction == NOP) {
         // do nothing
         step_ = 5;
@@ -135,6 +136,9 @@ void CU::execute(int instruction)
         set_flags();
         stepClock();
         flags_ = {Flag::EO_FLG, Flag::AI_FLG};
+        set_flags();
+        stepClock();
+        step_ = 5;
     } else if (instruction == SUB) {
         flags_ = {Flag::MI_FLG, Flag::IO_FLG};
         set_flags();
@@ -286,7 +290,7 @@ bool CU::assembler()
             ram_->set_data(address, mircocode);
         } else if (instruction == "add") {
             std::string param = line.substr(4);
-            unsigned int mircocode = std::stoul(param, nullptr, 16);
+            uint8_t mircocode = std::stoul(param, nullptr, 16);
             mircocode = mircocode<<4;
             mircocode += ADD;
             ram_->set_data(address, mircocode);
