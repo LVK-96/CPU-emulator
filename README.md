@@ -6,4 +6,4 @@ CPU emulator written in C++.
 TODO:
 * Test that all instructions work
 * GUI
-* Expand instruction set.
+* Expand instruction set
