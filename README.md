@@ -5,6 +5,5 @@ CPU emulator written in C++.
 
 TODO:
 * Test that all instructions work
-* Write compile script
 * GUI
-* Add additional registers and instructions 
+* Expand instruction set.
