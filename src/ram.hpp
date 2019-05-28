@@ -1,7 +1,7 @@
 #pragma once
-#include <boost/utility/binary.hpp>
 #include <map>
 #include <vector>
+
 #include "bus.hpp"
 
 class RAM 

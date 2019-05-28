@@ -1,9 +1,9 @@
 #pragma once
-#include <boost/utility/binary.hpp>
 #include <bitset>
 #include <vector>
 #include <iostream>
 #include <fstream>
+
 #include "alu.hpp"
 #include "bus.hpp"
 #include "clock.hpp"

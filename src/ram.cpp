@@ -1,6 +1,7 @@
 #include "ram.hpp"
 
-RAM::RAM(Bus* dataBus, Bus* addressBus): dataBus_(dataBus), addressBus_(addressBus), in_(false), out_(false), address_(0) {}
+RAM::RAM(Bus* dataBus, Bus* addressBus): dataBus_(dataBus), 
+         addressBus_(addressBus), in_(false), out_(false), address_(0) {}
 
 void RAM::stepClock()
 {

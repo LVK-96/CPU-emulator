@@ -94,7 +94,8 @@ void CU::stepClock()
 
 void CU::execute(int instruction)
 {
-/*  Instructions and corresponding mircocodes:
+    /*  
+    Instructions and corresponding mircocodes:
     NOP = No operation: nop = 0000,
     LOA = Load from ram to A: loa <address> = 0001
     ADD = Add A and data from given memory address to A: add <address> = 0010, 
@@ -103,11 +104,12 @@ void CU::execute(int instruction)
     JMP = Set instruction pointer to given address: jmp <address> = 0101,
     LDI = Load given value to A: ldi <value> = 0110,
     JC = Conditional jump !NOT IMPLEMENTED YET! = 0111,
-    HLT = Halt: hlt = 1001 */
+    HLT = Halt: hlt = 1001 
+    */
     
     std::cout << instruction << std::endl;
     int param = instruction >> 4;
-    instruction = instruction & BOOST_BINARY(0000 1111);
+    instruction = instruction & 0b00001111;
 
     stepClock();
 
@@ -260,13 +262,14 @@ void CU::reset_flags()
 
 }
 
-//TODO move assembler to a separate file
+// TODO move assembler to a separate file
 bool CU::assembler()
 {
     // read from file and write to ram starting from address 0
-    std::ifstream myfile("../test.asm");
+    // File path is relative to build dir 
+    std::ifstream myfile("../test/test.asm");
     if (!myfile.is_open()) {
-        std::cout << "unable to open .asm file, halting" << std::endl;
+        std::cout << "unable to open /test/test.asm, halting" << std::endl;
         return false;
     }
 
