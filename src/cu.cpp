@@ -1,15 +1,9 @@
-#include "cu.hpp"
+#include <bitset>
+#include <iostream>
+#include <fstream>
 
-#define NOP 0
-#define LOA 1
-#define ADD 2
-#define SUB 3
-#define STA 4
-#define JMP 5
-#define LDI 6
-#define JC 7
-#define OUT 8
-#define HLT 9
+#include "cu.hpp"
+#include "instructions.hpp"
 
 CU::CU(): step_(0), halted_(true)
 {
@@ -53,23 +47,25 @@ bool CU::is_halted() const
     if (halted_) {
         return true;
     }
+
     return false;
 }
 
 void CU::instructionCycle() 
 {
     if (!halted_) {
-        if (step_ == 0) { // read from pc to mar
+        if (step_ == 0) { // Read from pc to mar
             flags_ = {Flag::MI_FLG, Flag::CO_FLG};
             set_flags();
-        } else if (step_ == 1) { // pc++ and read from ram to ir
+        } else if (step_ == 1) { // Increment pc and read from ram to ir
             programCounter_->set_data(programCounter_->get_data()+1);
             flags_ = {Flag::RO_FLG, Flag::II_FLG};
             set_flags();
-        } else if (step_ > 1) { // execute instruction in ir 
+        } else if (step_ > 1) { // Execute instruction in ir 
             execute(instructionReg_->get_data());
             std::cout<<outputReg_->get_data()<<std::endl;
         }
+
         stepClock();
 
     }
@@ -87,7 +83,7 @@ void CU::stepClock()
     outputReg_->stepClock();
     reset_flags();
     step_++;
-    if (step_ > 4){
+    if (step_ > 4) {
         step_ = 0;
     }
 }   
@@ -97,9 +93,9 @@ void CU::execute(int instruction)
     /*  
     Instructions and corresponding mircocodes:
     NOP = No operation: nop = 0000,
-    LOA = Load from ram to A: loa <address> = 0001
-    ADD = Add A and data from given memory address to A: add <address> = 0010, 
-    SUB = Substract A and data from given memory address to A: sub <address> = 0011,
+    LOA = Load to A: loa <address> = 0001
+    ADD = Add A and data from memory address to A: add <address> = 0010, 
+    SUB = Substract A and data from memory address to A: sub <address> = 0011,
     STA = Store to ram: sta <address> = 0100,
     JMP = Set instruction pointer to given address: jmp <address> = 0101,
     LDI = Load given value to A: ldi <value> = 0110,
@@ -191,7 +187,8 @@ void CU::execute(int instruction)
 
 void CU::set_flags()
 {   
-/*  Flags:
+    /*  
+    Flags:
     'HLT' = Halt,            
     'MI' = MAR in,          
     'RI' = RAM in,
@@ -208,7 +205,8 @@ void CU::set_flags()
     'OI' = Output in,
     'CO' = PC out,
     'CE' = PC set, 
-    'J' =  Jump  */
+    'J' =  Jump  
+    */
 
     for (auto flag: flags_) {
         if (flag == Flag::HLT_FLG) { // Halt
@@ -259,77 +257,4 @@ void CU::reset_flags()
     A_->reset_flags();
     B_->reset_flags();
     outputReg_->reset_flags();
-
-}
-
-// TODO move assembler to a separate file
-bool CU::assembler()
-{
-    // read from file and write to ram starting from address 0
-    // File path is relative to build dir 
-    std::ifstream myfile("../test/test.asm");
-    if (!myfile.is_open()) {
-        std::cout << "unable to open /test/test.asm, halting" << std::endl;
-        return false;
-    }
-
-    if (myfile.peek() == std::ifstream::traits_type::eof()) {
-    // Empty File
-        std::cout << ".asm file empty, halting" << std::endl;
-        return false;
-    }
-    std::string line;
-    int address = 0;
-    
-    while(std::getline(myfile, line)) {
-        std::string instruction = line.substr(0, 3);
-        if (instruction == "nop") {
-            ram_->set_data(address, NOP);
-        } else if (instruction == "loa") {
-            std::string param = line.substr(4);
-            unsigned int mircocode = std::stoul(param, nullptr, 16);
-            mircocode = mircocode<<4;
-            mircocode += LOA;
-            ram_->set_data(address, mircocode);
-        } else if (instruction == "add") {
-            std::string param = line.substr(4);
-            uint8_t mircocode = std::stoul(param, nullptr, 16);
-            mircocode = mircocode<<4;
-            mircocode += ADD;
-            ram_->set_data(address, mircocode);
-        } else if (instruction == "sub") {
-            std::string param = line.substr(4);
-            unsigned int mircocode = std::stoul(param, nullptr, 16);
-            mircocode = mircocode<<4;
-            mircocode += SUB;
-            ram_->set_data(address, mircocode);
-        } else if (instruction == "sta") {
-            std::string param = line.substr(4);
-            unsigned int mircocode = std::stoul(param, nullptr, 16);
-            mircocode = mircocode<<4;
-            mircocode += STA;
-            ram_->set_data(address, mircocode);
-        } else if (instruction == "jmp") {
-            std::string param = line.substr(4);
-            unsigned int mircocode = std::stoul(param, nullptr, 16);
-            mircocode = mircocode<<4;
-            mircocode += JMP;
-            ram_->set_data(address, mircocode);
-        } else if (instruction == "ldi") {
-            std::string param = line.substr(4);
-            unsigned int mircocode = std::stoul(param, nullptr, 16);
-            mircocode = mircocode<<4;
-            mircocode += LDI;
-            ram_->set_data(address, mircocode);
-        } else if (instruction == "jc") {
-            // not implemented
-            continue;
-        } else if (instruction == "out") {
-            ram_->set_data(address, OUT);
-        } else if (instruction == "hlt") {
-            ram_->set_data(address, HLT);
-        }
-        address++;
-    }
-    return true;   
 }

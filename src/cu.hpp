@@ -1,9 +1,8 @@
 #pragma once
-#include <bitset>
-#include <vector>
-#include <iostream>
-#include <fstream>
 
+#include <vector>
+
+#include "assembler.hpp"
 #include "alu.hpp"
 #include "bus.hpp"
 #include "clock.hpp"
@@ -46,7 +45,8 @@ class CU
         void execute(int instruction);
         void set_flags();
         void reset_flags();
-        bool assembler();
+
+        friend bool assembler(CU* const cu);
 
     private:
         Clock* clock_;

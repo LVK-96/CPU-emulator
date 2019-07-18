@@ -1,11 +1,5 @@
 #pragma once
-#include <iostream>
-#include "alu.hpp"
 #include "cu.hpp"
-#include "bus.hpp"
-#include "clock.hpp"
-#include "ram.hpp"
-#include "register.hpp"
 
 class CPU 
 {

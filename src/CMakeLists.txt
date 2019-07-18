@@ -1,7 +1,11 @@
 cmake_minimum_required (VERSION 2.6)
 project(CPU-Emulator)
-set (CPU-Emulator_VERSION_MAJOR 0)
-set (CPU-Emulator_VERSION_MINOR 1)
+set(CPU-Emulator_VERSION_MAJOR 0)
+set(CPU-Emulator_VERSION_MINOR 1)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_compile_options(-Wall -Wextra -Wpedantic -g -o3)
-project (CpuEmulator)
-add_executable(CpuEmulator main.cpp cpu.cpp alu.cpp cu.cpp ram.cpp bus.cpp register.cpp instruction_reg.cpp clock.cpp)
+file(GLOB emulator_SRC
+    "*.hpp"
+    "*.cpp"
+)
+add_executable(CpuEmulator ${emulator_SRC})

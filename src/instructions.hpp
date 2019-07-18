@@ -1,0 +1,10 @@
+#define NOP 0
+#define LOA 1
+#define ADD 2
+#define SUB 3
+#define STA 4
+#define JMP 5
+#define LDI 6
+#define JC 7
+#define OUT 8
+#define HLT 9

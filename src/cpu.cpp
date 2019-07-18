@@ -1,7 +1,10 @@
+#include <iostream>
+
 #include "cpu.hpp"
+#include "assembler.hpp"
 
 CPU::CPU(): halted_(true) {
-   if(!cu_.assembler()) {
+   if(!assembler(&cu_)) {
        stop();
    } else {
        start();

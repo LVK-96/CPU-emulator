@@ -1,6 +1,6 @@
 #
-CpuEmulator
-*.asm
+bin/*
+.asm
 .vscode
 
 # Prerequisites
@@ -47,6 +47,3 @@ cmake_install.cmake
 install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
-
-#VSCode settings
-*.json
