@@ -21,7 +21,7 @@ bool assembler(CU* const cu)
 
     std::string line;
     int address = 0;
-    
+
     while(std::getline(myfile, line)) {
         std::string instruction = line.substr(0, 3);
         if (instruction == "nop") {
@@ -72,6 +72,6 @@ bool assembler(CU* const cu)
         }
         address++;
     }
-    
-    return true;   
+
+    return true;
 }

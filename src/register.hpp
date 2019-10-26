@@ -2,7 +2,7 @@
 #include "bus.hpp"
 #include <cstdint>
 
-class Register 
+class Register
 {
     public:
         Register(Bus* bus);

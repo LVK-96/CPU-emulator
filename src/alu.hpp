@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 #include "register.hpp"
 
 class ALU {
@@ -14,7 +14,7 @@ class ALU {
         void set_data(int data);
         int get_data() const;
         void reset_flags();
-    
+
     private:
         Register* A_;
         Register* B_;

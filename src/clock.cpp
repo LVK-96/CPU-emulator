@@ -12,7 +12,7 @@ void Clock::stop()
     running_ = false;
 }
 
-double Clock::get_freq() const 
+double Clock::get_freq() const
 {
     return freq_;
 }

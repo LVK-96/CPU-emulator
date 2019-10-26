@@ -4,7 +4,7 @@
 
 #include "bus.hpp"
 
-class RAM 
+class RAM
 {
     public:
         RAM(Bus* dataBus, Bus* addressBus);
@@ -12,7 +12,7 @@ class RAM
         RAM(RAM& other) = default;
         RAM& operator= (RAM& other) = default;
         void stepClock();
-        void set_data(int addr, int value);    
+        void set_data(int addr, int value);
         int get_data() const;
         std::map<int, int> dump() const;
         void set_address(int addr);

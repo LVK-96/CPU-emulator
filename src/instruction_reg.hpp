@@ -4,6 +4,6 @@
 class InstructionRegister: public Register
 {
     public:
-        InstructionRegister(Bus *bus);       
+        InstructionRegister(Bus *bus);
         void stepClock();
 };

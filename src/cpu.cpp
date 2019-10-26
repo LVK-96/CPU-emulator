@@ -11,13 +11,13 @@ CPU::CPU(): halted_(true) {
    }
 }
 
-void CPU::start() 
+void CPU::start()
 {
     halted_ = false;
     cu_.start();
 }
 
-void CPU::stop() 
+void CPU::stop()
 {
     if (!cu_.is_halted()) {
         cu_.stop();
@@ -33,7 +33,7 @@ bool CPU::is_halted() const
     return false;
 }
 
-void CPU::clockCycle() 
+void CPU::clockCycle()
 {
     if (!cu_.is_halted()) {
         cu_.instructionCycle();
@@ -49,5 +49,5 @@ void CPU::clockCycle()
         } else {
             clockCycle();
         }
-    } 
+    }
 }

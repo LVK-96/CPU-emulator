@@ -1,6 +1,6 @@
 #include "alu.hpp"
 
-ALU::ALU(Register* A, Register* B, Bus* dataBus): A_(A), B_(B), 
+ALU::ALU(Register* A, Register* B, Bus* dataBus): A_(A), B_(B),
 dataBus_(dataBus), data_(0), substract_(false), add_(false), out_(false) {}
 
 void ALU::stepClock()
@@ -14,13 +14,13 @@ void ALU::stepClock()
     }
 }
 
-void ALU::set_substract() 
+void ALU::set_substract()
 {
     add_ = false;
     substract_ = true;
 }
 
-void ALU::set_add() 
+void ALU::set_add()
 {
     substract_ = false;
     add_ = true;

@@ -1,6 +1,6 @@
 #pragma once
 
-class Clock 
+class Clock
 {
     public:
         Clock(double freq);

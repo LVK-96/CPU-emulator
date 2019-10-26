@@ -10,27 +10,27 @@
 #include "register.hpp"
 #include "instruction_reg.hpp"
 
-class CU 
+class CU
 {
     public:
         enum class Flag
         {
-            HLT_FLG,     
-            MI_FLG,  
-            RI_FLG, 
-            RO_FLG, 
+            HLT_FLG,
+            MI_FLG,
+            RI_FLG,
+            RO_FLG,
             IO_FLG,
             II_FLG,
             AI_FLG,
             AO_FLG,
             EO_FLG,
-            ADD_FLG, 
+            ADD_FLG,
             SUB_FLG,
             BI_FLG,
             BO_FLG,
             OI_FLG,
             CO_FLG,
-            J_FLG 
+            J_FLG
         };
 
         CU();
@@ -62,5 +62,5 @@ class CU
         Register* outputReg_;
         std::vector<Flag> flags_;
         int step_; //step in instruction cycle
-        bool halted_; 
+        bool halted_;
 };

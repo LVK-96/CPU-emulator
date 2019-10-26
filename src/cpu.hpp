@@ -1,7 +1,7 @@
 #pragma once
 #include "cu.hpp"
 
-class CPU 
+class CPU
 {
     public:
         CPU();

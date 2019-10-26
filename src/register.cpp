@@ -2,7 +2,7 @@
 
 Register::Register(Bus* bus): bus_(bus), in_(false), out_(false), data_(0) {}
 
-void Register::stepClock() 
+void Register::stepClock()
 {
     if (in_) {
         set_data(bus_->get_data());
@@ -24,7 +24,7 @@ void Register::set_data(int data)
 void Register::reset_flags()
 {
     in_ = false;
-    out_ = false; 
+    out_ = false;
 }
 
 void Register::reset()
@@ -39,5 +39,5 @@ void Register::set_in()
 
 void Register::set_out()
 {
-    out_ = true; 
+    out_ = true;
 }
