@@ -22,6 +22,9 @@ bool assembler(CU* const cu)
     std::string line;
     int address = 0;
 
+    // instruction format in memory: 0000   0000
+    //                               data | instruction
+
     while(std::getline(myfile, line)) {
         std::string instruction = line.substr(0, 3);
         if (instruction == "nop") {

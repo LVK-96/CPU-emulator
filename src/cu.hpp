@@ -19,7 +19,8 @@ class CU
             MI_FLG,
             RI_FLG,
             RO_FLG,
-            IO_FLG,
+            IO1_FLG,
+            IO2_FLG,
             II_FLG,
             AI_FLG,
             AO_FLG,
@@ -56,7 +57,7 @@ class CU
         Bus* addressBus_;
         Register* programCounter_;
         Register* memoryAddressReg_;
-        Register* instructionReg_;
+        InstructionRegister* instructionReg_;
         Register* A_;
         Register* B_;
         Register* outputReg_;

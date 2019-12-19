@@ -1,12 +1,17 @@
 #include "ram.hpp"
+#include <iostream>
+#include <algorithm>
+#include <utility>
+#include <bitset>
 
-RAM::RAM(Bus* dataBus, Bus* addressBus): dataBus_(dataBus), 
+RAM::RAM(Bus* dataBus, Bus* addressBus): dataBus_(dataBus),
          addressBus_(addressBus), in_(false), out_(false), address_(0) {}
 
 void RAM::stepClock()
 {
     if (in_) {
         set_address(addressBus_->get_data());
+        std::cout << "RAM: Storing " << dataBus_->get_data() << " in address " << address_ << std::endl;
         set_data(address_, dataBus_->get_data());
     } else if (out_) {
         set_address(addressBus_->get_data());
@@ -16,7 +21,7 @@ void RAM::stepClock()
 
 void RAM::set_data(int addr, int value)
 {
-    data_.insert(std::make_pair(addr, value));
+    data_[addr] = value;
 }
 
 int RAM::get_data() const
@@ -49,5 +54,5 @@ void RAM::set_out()
 void RAM::reset_flags()
 {
     in_ = false;
-    out_ = false; 
+    out_ = false;
 }

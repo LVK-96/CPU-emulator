@@ -6,8 +6,10 @@ Register::Register(std::string name, Bus* bus): name_(name), bus_(bus), in_(fals
 void Register::stepClock()
 {
     if (in_) {
+        std::cout << "Setting " << bus_->get_data() << " to " << name_ << std::endl;
         set_data(bus_->get_data());
     } else if (out_) {
+        std::cout << "Getting " << get_data() << " from " << name_ << std::endl;
         bus_->set_data(get_data());
     }
 }

@@ -13,7 +13,7 @@ class Register
         virtual void stepClock();
         int get_data() const;
         void set_data(int data);
-        void reset_flags();
+        virtual void reset_flags();
         void reset();
         void set_in();
         void set_out();

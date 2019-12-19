@@ -1,6 +1,8 @@
 #include <bitset>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
+#include <utility>
 
 #include "cu.hpp"
 #include "instructions.hpp"
@@ -13,7 +15,7 @@ CU::CU(): step_(0), halted_(true)
     ram_ = new RAM(dataBus_, addressBus_);
     memoryAddressReg_ = new Register("MAR", addressBus_);
     programCounter_ = new Register("PC", addressBus_);
-    instructionReg_ = new InstructionRegister("IR", dataBus_);
+    instructionReg_ = new InstructionRegister("IR", dataBus_, addressBus_);
     A_ = new Register("A", dataBus_);
     B_ = new Register("B", dataBus_);
     outputReg_ = new Register("OUTPUT", dataBus_);
@@ -55,29 +57,37 @@ void CU::instructionCycle()
 {
     if (!halted_) {
         if (step_ == 0) { // Read from pc to mar
+            std::map<int, int> ram_dump = ram_->dump();
+            std::cout<<std::endl;
+            std::cout<<"RAM dump: "<<std::endl;
+            std::for_each(ram_dump.begin(), ram_dump.end(),
+                [](const std::pair<int, int>& n) {
+                    std::cout<<n.first<<": "<<std::bitset<8>(n.second)<<std::endl;
+                }
+            );
             flags_ = {Flag::MI_FLG, Flag::CO_FLG};
             set_flags();
         } else if (step_ == 1) { // Increment pc and read from ram to ir
-            programCounter_->set_data(programCounter_->get_data()+1);
+            programCounter_->set_data(programCounter_->get_data() + 1);
             flags_ = {Flag::RO_FLG, Flag::II_FLG};
             set_flags();
         } else if (step_ > 1) { // Execute instruction in ir
             execute(instructionReg_->get_data());
-            std::cout<<outputReg_->get_data()<<std::endl;
+            std::cout<<"Output: "
+                <<std::bitset<8>(outputReg_->get_data())<<std::endl;
         }
 
         stepClock();
-
     }
 }
 
 void CU::stepClock()
 {
+    programCounter_->stepClock();
     ram_->stepClock();
     alu_->stepClock();
-    programCounter_->stepClock();
-    memoryAddressReg_->stepClock();
     instructionReg_->stepClock();
+    memoryAddressReg_->stepClock();
     A_->stepClock();
     B_->stepClock();
     outputReg_->stepClock();
@@ -95,28 +105,29 @@ void CU::execute(int instruction)
     NOP = No operation: nop = 0000,
     LOA = Load to A: loa <address> = 0001
     ADD = Add A and data from memory address to A: add <address> = 0010,
-    SUB = Substract A and data from memory address to A: sub <address> = 0011,
-    STA = Store to ram: sta <address> = 0100,
+    SUB = Substract A and data from memory address. Store result to A: sub <address> = 0011,
+    STA = Store A to ram: sta <address> = 0100,
     JMP = Set instruction pointer to given address: jmp <address> = 0101,
     LDI = Load given value to A: ldi <value> = 0110,
     JC = Conditional jump !NOT IMPLEMENTED YET! = 0111,
+    OUT = Set A to output = 1000,
     HLT = Halt: hlt = 1001
     */
 
-    std::cout << instruction << std::endl;
+    //std::cout <<std::bitset<8>(instruction)<<std::endl;
     int param = instruction >> 4;
     instruction = instruction & 0b00001111;
 
     stepClock();
 
     std::cout<<"Instruction: "<<std::bitset<4>(instruction)<<std::endl;
-    std::cout<<"Parameter: "<<param<<std::endl;
+    std::cout<<"Parameter: "<<std::bitset<4>(param)<<std::endl;
 
     if (instruction == NOP) {
         // do nothing
         step_ = 5;
     } else if (instruction == LOA) {
-        flags_ = {Flag::MI_FLG, Flag::IO_FLG};
+        flags_ = {Flag::MI_FLG, Flag::IO2_FLG};
         set_flags();
         stepClock();
         flags_ = {Flag::AI_FLG, Flag::RO_FLG};
@@ -124,7 +135,7 @@ void CU::execute(int instruction)
         stepClock();
         step_ = 5;
     } else if (instruction == ADD) {
-        flags_ = {Flag::MI_FLG, Flag::IO_FLG};
+        flags_ = {Flag::MI_FLG, Flag::IO2_FLG};
         set_flags();
         stepClock();
         flags_ = {Flag::BI_FLG, Flag::RO_FLG};
@@ -138,7 +149,7 @@ void CU::execute(int instruction)
         stepClock();
         step_ = 5;
     } else if (instruction == SUB) {
-        flags_ = {Flag::MI_FLG, Flag::IO_FLG};
+        flags_ = {Flag::MI_FLG, Flag::IO2_FLG};
         set_flags();
         stepClock();
         flags_ = {Flag::BI_FLG, Flag::RO_FLG};
@@ -150,15 +161,18 @@ void CU::execute(int instruction)
         flags_ = {Flag::EO_FLG, Flag::AI_FLG};
         step_ = 5;
     } else if (instruction == STA) {
-        flags_ = {Flag::MI_FLG, Flag::IO_FLG};
+        flags_ = {Flag::MI_FLG, Flag::IO2_FLG};
         set_flags();
         stepClock();
-        flags_ = {Flag::RI_FLG, Flag::AO_FLG};
+        flags_ = {Flag::AO_FLG};
+        set_flags();
+        stepClock();
+        flags_ = {Flag::RI_FLG};
         set_flags();
         stepClock();
         step_ = 5;
     } else if (instruction == JMP) {
-        flags_ = {Flag::MI_FLG, Flag::IO_FLG};
+        flags_ = {Flag::MI_FLG, Flag::IO2_FLG};
         set_flags();
         stepClock();
         flags_ = {Flag::J_FLG};
@@ -166,7 +180,7 @@ void CU::execute(int instruction)
         stepClock();
         step_ = 5;
     } else if (instruction == LDI) {
-        flags_ = {Flag::AI_FLG, Flag::IO_FLG};
+        flags_ = {Flag::AI_FLG, Flag::IO1_FLG};
         set_flags();
         stepClock();
         step_ = 5;
@@ -193,7 +207,8 @@ void CU::set_flags()
     'MI' = MAR in,
     'RI' = RAM in,
     'RO' = RAM out,
-    'IO' = IR out,
+    'IO1' = IR out to databus,
+    'IO2' = IR out to address bus,
     'II' = IR in,
     'AI' = A in,
     'AO' = A out,
@@ -217,8 +232,11 @@ void CU::set_flags()
             ram_->set_in();
         } else if (flag == Flag::RO_FLG) { // RAM out
             ram_->set_out();
-        } else if (flag == Flag::IO_FLG) { // IR out
+        } else if (flag == Flag::IO1_FLG) { // IR out
             instructionReg_->set_out();
+        } else if (flag == Flag::IO2_FLG) { // IR out
+            instructionReg_->set_out();
+            instructionReg_->set_addr_out();
         } else if (flag == Flag::II_FLG) { // IR in
             instructionReg_->set_in();
         } else if (flag == Flag::AI_FLG) { // A in
