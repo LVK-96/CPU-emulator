@@ -58,11 +58,15 @@ void CU::instructionCycle()
     if (!halted_) {
         if (step_ == 0) { // Read from pc to mar
             std::map<int, int> ram_dump = ram_->dump();
-            std::cout<<std::endl;
-            std::cout<<"RAM dump: "<<std::endl;
+            std::cout << std::endl;
+            std::cout << "RAM dump: " << std::endl;
             std::for_each(ram_dump.begin(), ram_dump.end(),
                 [](const std::pair<int, int>& n) {
-                    std::cout<<n.first<<": "<<std::bitset<8>(n.second)<<std::endl;
+                    int address = n.first;
+                    int data = n.second;
+                    std::cout << "0x" << std::hex << address << ": "
+                        << std::bitset<8>(data) << " | 0x"
+                        << data << std::dec << std::endl;
                 }
             );
             flags_ = {Flag::MI_FLG, Flag::CO_FLG};
@@ -73,8 +77,8 @@ void CU::instructionCycle()
             set_flags();
         } else if (step_ > 1) { // Execute instruction in ir
             execute(instructionReg_->get_data());
-            std::cout<<"Output: "
-                <<std::bitset<8>(outputReg_->get_data())<<std::endl;
+            std::cout << "Output: "
+                << std::bitset<8>(outputReg_->get_data()) << std::endl;
         }
 
         stepClock();
@@ -114,14 +118,13 @@ void CU::execute(int instruction)
     HLT = Halt: hlt = 1001
     */
 
-    //std::cout <<std::bitset<8>(instruction)<<std::endl;
     int param = instruction >> 4;
     instruction = instruction & 0b00001111;
 
     stepClock();
 
-    std::cout<<"Instruction: "<<std::bitset<4>(instruction)<<std::endl;
-    std::cout<<"Parameter: "<<std::bitset<4>(param)<<std::endl;
+    std::cout << "Instruction: " << std::bitset<4>(instruction) << std::endl;
+    std::cout << "Parameter: " << std::bitset<4>(param) << std::endl;
 
     if (instruction == NOP) {
         // do nothing

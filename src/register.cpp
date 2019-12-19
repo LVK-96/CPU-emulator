@@ -6,11 +6,11 @@ Register::Register(std::string name, Bus* bus): name_(name), bus_(bus), in_(fals
 void Register::stepClock()
 {
     if (in_) {
-        std::cout << "Setting " << bus_->get_data() << " to " << name_ << std::endl;
         set_data(bus_->get_data());
+        std::cout << "Write 0x" << std::hex << bus_->get_data() << std::dec << " to " << name_ << std::endl;
     } else if (out_) {
-        std::cout << "Getting " << get_data() << " from " << name_ << std::endl;
         bus_->set_data(get_data());
+        std::cout << "Read 0x" << std::hex << get_data() << std::dec << " from " << name_ << std::endl;
     }
 }
 

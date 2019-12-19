@@ -7,12 +7,13 @@ InstructionRegister::InstructionRegister(std::string name, Bus *dataBus, Bus *ad
 void InstructionRegister::stepClock()
 {
     if (in_) {
-        std::cout << "Setting " << bus_->get_data() << " to " << name_ << std::endl;
         set_data(bus_->get_data());
+        std::cout << "Write 0x" << std::hex << bus_->get_data() << std::dec << " to " << name_ << std::endl;
     } else if (out_) {
-        std::cout << "Getting " << ((get_data() & 0xf0) >> 4)<< " from " << name_ << std::endl;
+        int value = (get_data() & 0xf0) >> 4;
         if (outAddr_) addressBus_->set_data((get_data() & 0xf0) >> 4);
         else bus_->set_data((get_data() & 0xf0) >> 4);
+        std::cout << "Read 0x" << std::hex << value << std::dec << " from " << name_ << std::endl;
     }
 }
 

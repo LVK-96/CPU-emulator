@@ -38,10 +38,10 @@ void CPU::clockCycle()
     if (!cu_.is_halted()) {
         cu_.instructionCycle();
     } else {
-        std::cout<<"Paused"<<std::endl;
-        std::cout<<"Run program again? (y/n)"<<std::endl;
+        std::cout << "Paused" << std::endl;
+        std::cout << "Run program again? (y/n)" << std::endl;
         std::string answer;
-        std::cin>>answer;
+        std::cin >> answer;
         if (answer == "y") {
             stop();
         } else if (answer == "n") {

@@ -11,11 +11,12 @@ void RAM::stepClock()
 {
     if (in_) {
         set_address(addressBus_->get_data());
-        std::cout << "RAM: Storing " << dataBus_->get_data() << " in address " << address_ << std::endl;
+        std::cout << "RAM: Storing 0x" << std::hex << dataBus_->get_data() << " in address 0x" << address_ << std::dec << std::endl;
         set_data(address_, dataBus_->get_data());
     } else if (out_) {
         set_address(addressBus_->get_data());
         dataBus_->set_data(get_data());
+        std::cout << "RAM: Read 0x" << std::hex << get_data() << " from address 0x" << address_ << std::dec << std::endl;
     }
 }
 
