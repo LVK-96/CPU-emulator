@@ -1,8 +1,9 @@
 #include "instruction_reg.hpp"
 #include <iostream>
-InstructionRegister::InstructionRegister(Bus *bus): Register(bus) {}
 
-void InstructionRegister::stepClock() 
+InstructionRegister::InstructionRegister(std::string name, Bus *bus): Register(name, bus) {}
+
+void InstructionRegister::stepClock()
 {
     if (in_) {
         set_data(bus_->get_data());

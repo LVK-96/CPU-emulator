@@ -11,12 +11,12 @@ CU::CU(): step_(0), halted_(true)
     dataBus_ = new Bus();
     addressBus_ = new Bus();
     ram_ = new RAM(dataBus_, addressBus_);
-    memoryAddressReg_ = new Register(addressBus_);
-    programCounter_ = new Register(addressBus_);
-    instructionReg_ = new InstructionRegister(dataBus_);
-    A_ = new Register(dataBus_);
-    B_ = new Register(dataBus_);
-    outputReg_ = new Register(dataBus_);
+    memoryAddressReg_ = new Register("MAR", addressBus_);
+    programCounter_ = new Register("PC", addressBus_);
+    instructionReg_ = new InstructionRegister("IR", dataBus_);
+    A_ = new Register("A", dataBus_);
+    B_ = new Register("B", dataBus_);
+    outputReg_ = new Register("OUTPUT", dataBus_);
     alu_ = new ALU(A_, B_, dataBus_);
 }
 

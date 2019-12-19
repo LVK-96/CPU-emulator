@@ -1,6 +1,7 @@
 #include "register.hpp"
+#include <iostream>
 
-Register::Register(Bus* bus): bus_(bus), in_(false), out_(false), data_(0) {}
+Register::Register(std::string name, Bus* bus): name_(name), bus_(bus), in_(false), out_(false), data_(0) {}
 
 void Register::stepClock()
 {

@@ -1,11 +1,12 @@
 #pragma once
 #include "bus.hpp"
 #include <cstdint>
+#include <string>
 
 class Register
 {
     public:
-        Register(Bus* bus);
+        Register(std::string name, Bus* bus);
         virtual ~Register() = default;
         Register(Register& other) = default;
         Register& operator= (Register& other) = default;
@@ -18,6 +19,7 @@ class Register
         void set_out();
 
     protected:
+        std::string name_;
         Bus* bus_;
         bool in_;
         bool out_;
