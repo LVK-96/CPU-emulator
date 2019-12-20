@@ -61,11 +61,7 @@ void CU::stop()
 
 bool CU::is_halted() const
 {
-    if (halted_) {
-        return true;
-    }
-
-    return false;
+    return halted_;
 }
 
 void CU::instructionCycle()
@@ -125,8 +121,6 @@ void CU::execute(int instruction)
 
     int param = instruction >> 4;
     instruction = instruction & 0b00001111;
-
-    stepClock();
 
     std::cout << "Instruction: " << std::bitset<4>(instruction) << std::endl;
     std::cout << "Parameter: " << std::bitset<4>(param) << std::endl;
