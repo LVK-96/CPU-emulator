@@ -7,6 +7,21 @@
 #include "cu.hpp"
 #include "instructions.hpp"
 
+inline void print_ram_dump(std::map<int, int> dump)
+{
+    std::cout << std::endl;
+    std::cout << "RAM dump: " << std::endl;
+    std::for_each(dump.begin(), dump.end(),
+        [](const std::pair<int, int>& n) {
+            int address = n.first;
+            int data = n.second;
+            std::cout << "0x" << std::hex << address << ": "
+                << std::bitset<8>(data) << " | 0x"
+                << data << std::dec << std::endl;
+        }
+    );
+}
+
 CU::CU(): step_(0), halted_(true)
 {
     clock_ = new Clock(5);
@@ -58,17 +73,7 @@ void CU::instructionCycle()
     if (!halted_) {
         if (step_ == 0) { // Read from pc to mar
             std::map<int, int> ram_dump = ram_->dump();
-            std::cout << std::endl;
-            std::cout << "RAM dump: " << std::endl;
-            std::for_each(ram_dump.begin(), ram_dump.end(),
-                [](const std::pair<int, int>& n) {
-                    int address = n.first;
-                    int data = n.second;
-                    std::cout << "0x" << std::hex << address << ": "
-                        << std::bitset<8>(data) << " | 0x"
-                        << data << std::dec << std::endl;
-                }
-            );
+            print_ram_dump(ram_dump);
             flags_ = {Flag::MI_FLG, Flag::CO_FLG};
             set_flags();
         } else if (step_ == 1) { // Increment pc and read from ram to ir
@@ -162,6 +167,8 @@ void CU::execute(int instruction)
         set_flags();
         stepClock();
         flags_ = {Flag::EO_FLG, Flag::AI_FLG};
+        set_flags();
+        stepClock();
         step_ = 5;
     } else if (instruction == STA) {
         flags_ = {Flag::MI_FLG, Flag::IO2_FLG};

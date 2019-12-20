@@ -1,5 +1,5 @@
-#include "alu.hpp"
 #include <iostream>
+#include "alu.hpp"
 
 ALU::ALU(Register* A, Register* B, Bus* dataBus): A_(A), B_(B),
 dataBus_(dataBus), data_(0), substract_(false), add_(false), out_(false) {}
@@ -9,9 +9,10 @@ void ALU::stepClock()
     if (out_) {
         dataBus_->set_data(get_data());
     } else if (substract_) {
+        std::cout << "Substracting: " << A_->get_data() << " - " << B_->get_data() << std::endl;
         set_data(A_->get_data() - B_->get_data());
     } else if (add_) {
-        std::cout << "Adding: " << A_->get_data() << "+" << B_->get_data() << std::endl;
+        std::cout << "Adding: " << A_->get_data() << " + " << B_->get_data() << std::endl;
         set_data(A_->get_data() + B_->get_data());
     }
 }
