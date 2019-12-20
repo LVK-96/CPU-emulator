@@ -81,6 +81,7 @@ bool assembler(CU* const cu)
         } else if (instruction == "hlt") {
             cu->ram_->set_data(address, HLT);
         }
+
         address++;
     }
 

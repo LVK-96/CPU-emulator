@@ -12,14 +12,14 @@ class ALU {
         void set_add();
         void set_out();
         void set_data(int data);
-        int get_data() const;
+        uint8_t get_data() const;
         void reset_flags();
 
     private:
         Register* A_;
         Register* B_;
         Bus* dataBus_;
-        int data_;
+        uint8_t data_;
         bool substract_;
         bool add_;
         bool out_;

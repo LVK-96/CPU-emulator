@@ -40,7 +40,7 @@ void ALU::set_data(int data)
     data_ = data;
 }
 
-int ALU::get_data() const
+uint8_t ALU::get_data() const
 {
     return data_;
 }

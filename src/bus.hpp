@@ -1,12 +1,13 @@
 #pragma once
+#include <cstdint>
 
 class Bus {
     public:
         Bus();
         void reset();
-        int get_data();
-        void set_data(int value);
+        uint8_t get_data();
+        void set_data(uint8_t value);
 
     private:
-        int data_;
+        uint8_t data_;
 };

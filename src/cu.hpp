@@ -43,7 +43,7 @@ class CU
         bool is_halted() const;
         void instructionCycle();
         void stepClock();
-        void execute(int instruction);
+        void execute(uint8_t instruction);
         void set_flags();
         void reset_flags();
 
@@ -62,6 +62,6 @@ class CU
         Register* B_;
         Register* outputReg_;
         std::vector<Flag> flags_;
-        int step_; //step in instruction cycle
+        unsigned int step_; //step in instruction cycle
         bool halted_;
 };

@@ -7,12 +7,12 @@
 #include "cu.hpp"
 #include "instructions.hpp"
 
-inline void print_ram_dump(std::map<int, int> dump)
+inline void print_ram_dump(std::map<uint8_t, uint8_t> dump)
 {
     std::cout << std::endl;
     std::cout << "RAM dump: " << std::endl;
     std::for_each(dump.begin(), dump.end(),
-        [](const std::pair<int, int>& n) {
+        [](const std::pair<uint8_t, uint8_t>& n) {
             int address = n.first;
             int data = n.second;
             std::cout << "0x" << std::hex << address << ": "
@@ -68,7 +68,7 @@ void CU::instructionCycle()
 {
     if (!halted_) {
         if (step_ == 0) { // Read from pc to mar
-            std::map<int, int> ram_dump = ram_->dump();
+            std::map<uint8_t, uint8_t> ram_dump = ram_->dump();
             print_ram_dump(ram_dump);
             flags_ = {Flag::MI_FLG, Flag::CO_FLG};
             set_flags();
@@ -103,7 +103,7 @@ void CU::stepClock()
     }
 }
 
-void CU::execute(int instruction)
+void CU::execute(uint8_t instruction)
 {
     /*
     Instructions and corresponding mircocodes:
@@ -119,7 +119,7 @@ void CU::execute(int instruction)
     HLT = Halt: hlt = 1001
     */
 
-    int param = instruction >> 4;
+    uint8_t param = instruction >> 4;
     instruction = instruction & 0b00001111;
 
     std::cout << "Instruction: " << std::bitset<4>(instruction) << std::endl;

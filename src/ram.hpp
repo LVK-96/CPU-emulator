@@ -12,10 +12,10 @@ class RAM
         RAM(RAM& other) = default;
         RAM& operator= (RAM& other) = default;
         void stepClock();
-        void set_data(int addr, int value);
-        int get_data() const;
-        std::map<int, int> dump() const;
-        void set_address(int addr);
+        void set_data(uint8_t addr, uint8_t value);
+        uint8_t get_data() const;
+        std::map<uint8_t, uint8_t> dump() const;
+        void set_address(uint8_t addr);
         void set_in();
         void set_out();
         void reset_flags();
@@ -25,6 +25,6 @@ class RAM
         Bus* addressBus_;
         bool in_;
         bool out_;
-        int address_; //holds address for calling set or get
-        std::map<int, int> data_;
+        uint8_t address_; //holds address for calling set or get
+        std::map<uint8_t, uint8_t> data_;
 };

@@ -7,12 +7,12 @@ void Bus::reset()
     data_ = 0;
 }
 
-int Bus::get_data()
+uint8_t Bus::get_data()
 {
     return data_;
 }
 
-void Bus::set_data(int value)
+void Bus::set_data(uint8_t value)
 {
     data_ = value;
 }

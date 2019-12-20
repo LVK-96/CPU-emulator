@@ -1,7 +1,8 @@
 #pragma once
-#include "bus.hpp"
 #include <cstdint>
 #include <string>
+
+#include "bus.hpp"
 
 class Register
 {
@@ -11,8 +12,8 @@ class Register
         Register(Register& other) = default;
         Register& operator= (Register& other) = default;
         virtual void stepClock();
-        int get_data() const;
-        void set_data(int data);
+        uint8_t get_data() const;
+        void set_data(uint8_t data);
         virtual void reset_flags();
         void reset();
         void set_in();

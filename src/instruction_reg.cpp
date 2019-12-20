@@ -8,12 +8,12 @@ void InstructionRegister::stepClock()
 {
     if (in_) {
         set_data(bus_->get_data());
-        std::cout << "Write 0x" << std::hex << bus_->get_data() << std::dec << " to " << name_ << std::endl;
+        std::cout << "Write 0x" << std::hex << (int) bus_->get_data() << std::dec << " to " << name_ << std::endl;
     } else if (out_) {
         int value = (get_data() & 0xf0) >> 4;
         if (outAddr_) addressBus_->set_data((get_data() & 0xf0) >> 4);
         else bus_->set_data((get_data() & 0xf0) >> 4);
-        std::cout << "Read 0x" << std::hex << value << std::dec << " from " << name_ << std::endl;
+        std::cout << "Read 0x" << std::hex << (int) value << std::dec << " from " << name_ << std::endl;
     }
 }
 
