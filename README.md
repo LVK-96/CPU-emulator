@@ -1,9 +1,27 @@
 # CPU emulator
-CPU emulator written in C++.
-* /src: source code
-* /doc: documentation 
+Little project I did to teach myself computer architecture. WIP.
 
-TODO:
-* Test that all instructions work
+Based on Ben Eater's excellent [video series](https://www.youtube.com/playlist?list=PLowKtXNTBypGqImE405J2565dvjafglHU).
+
+## Dev environment setup
+Requires cmake.
+
+> create a build dir and run cmake
+```bash
+mkdir build && cd build
+cmake ../src # generate makefile
+```
+
+> Build the program and run
+```bash
+make
+./CpuEmulator
+```
+> The emulator runs the program in `test/test.asm`
+
+
+## TODO
+* Proper testing :D
+* Add documentation for instuction formats
 * GUI
-* Expand instruction set
+
