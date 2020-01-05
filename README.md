@@ -6,7 +6,7 @@ Based on Ben Eater's excellent [video series](https://www.youtube.com/playlist?l
 ## Dev environment setup
 Requires cmake.
 
-> create a build dir and run cmake
+> create a build dir and run [cmake](https://cmake.org/).
 ```bash
 mkdir build && cd build
 cmake ../src # generate makefile
